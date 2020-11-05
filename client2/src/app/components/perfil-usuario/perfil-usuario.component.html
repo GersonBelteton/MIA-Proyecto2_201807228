@@ -1,0 +1,60 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+
+  
+    <div class="collapse navbar-collapse" id="navbarColor01">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/user">Perfil </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="user/products">Productos</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/login">Cerrar sesion</a>
+          </li>
+      </ul>
+      <form class="form-inline my-2 my-lg-0">
+        <input class="form-control mr-sm-2" type="text" placeholder="Search">
+        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+      </form>
+    </div>
+  </nav>
+
+
+  <div class="jumbotron" style="size: 100%;"> 
+    <table style="size:100%;">
+        <tr style="width: 100%; height: 20%;"> 
+            <h2 style= "float:left"class="display-3">{{nombre}} {{apellido}}</h2>
+      
+        </tr>
+        <tr>
+            <hr class="my-4">
+        </tr>
+        <tr style="width: 100%; height: 80%;">
+            <th style="width: 50%;">
+                <div style="float: left;"> 
+                
+                    <h4>{{correo}}</h4>
+                    <h4>{{fecha}}</h4>
+                    <h4>{{pais}}</h4>
+                    <button (click)="modificar()"type="button" class="btn btn-primary">Modificar datos</button>
+                </div>
+            </th>
+            <th style="width: 50%;" >
+                <div >
+                    <img style="height: 50%; width: 50%; float: right; "
+                    [src]="url" alt="Card image">
+                        <div class="form-group">
+                          <input type="file" (change)="readUrl($event)" class="form-control-file" id="exampleInputFile" aria-describedby="fileHelp">
+                        </div>
+                </div>
+            </th>
+    
+        </tr>
+  
+    </table>
+
+
+
+
+  </div>

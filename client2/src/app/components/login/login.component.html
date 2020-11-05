@@ -1,0 +1,96 @@
+<div class="jumbotron text-center">
+  <h1 class="display-4">GTSales Marketplace</h1>
+
+</div>
+
+
+<div class="container" style="margin-left: 10%; size: 100%;">
+  <div class="card text-white bg-primary mb-3" style="max-width: 20rem; float: left;">
+    <div class="card-header">
+      <h4>LOGIN</h4>
+    </div>
+    <div class="card-body">
+
+      <form (ngSubmit)="logIn()">
+        <fieldset>
+
+
+          <div class="form-group">
+            <label for="exampleInputEmail1">Email address</label>
+            <input [(ngModel)]="login.correo" name="correo" type="email" class="form-control" aria-describedby="emailHelp" placeholder="Enter email">
+            <small class="form-text text-muted">We'll never share your email with anyone else.</small>
+          </div>
+          <div class="form-group">
+            <label for="exampleInputPassword1">Password</label>
+            <input [(ngModel)]="login.contrasena"
+            name="contrasena" type="password" class="form-control" placeholder="Password">
+          </div>
+          <button type="submit" class="btn btn-secondary">Ingresar</button>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+
+
+  <div class="card text-white bg-primary mb-3" style="width:50%; float: right; margin-right: 10%;">
+    <div class="card-header">
+      <h4>REGISTRATE</h4>
+    </div>
+    <div class="card-body">
+
+      <form>
+        <fieldset>
+
+
+          <div class="form-group">
+            <label for="exampleInputEmail1">Correo electrònico</label>
+            <input [(ngModel)]="usuario.correo" name="correo" type="email" class="form-control"
+              aria-describedby="emailHelp" placeholder="Enter email">
+            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+          </div>
+          <div class="form-group">
+            <label for="exampleInputPassword1">Contraseña</label>
+            <input [(ngModel)]="contra1" name="contrasena" type="password" class="form-control" placeholder="Password">
+          </div>
+          <div class="form-group">
+            <label for="exampleInputPassword1">Confirmar Contraseña</label>
+            <input [(ngModel)]="contra2" name="contrasena2" type="password" class="form-control" placeholder="Password">
+          </div>
+          <div class="form-group">
+            <label>Nombre</label>
+            <input [(ngModel)]="usuario.nombre" name="nombre" type="text" class="form-control">
+          </div>
+          <div class="form-group">
+            <label>Apellido</label>
+            <input [(ngModel)]="usuario.apellido" name="apellido" type="text" class="form-control">
+          </div>
+          <div class="form-group">
+            <label>Fecha de nacimiento</label>
+            <input [(ngModel)]="usuario.fecha_nacimiento" name="fecha" type="text" class="form-control">
+          </div>
+          <div class="form-group">
+            <label>Pais</label>
+            <input [(ngModel)]="usuario.pais" name="pais" type="text" class="form-control">
+          </div>
+
+        </fieldset>
+      </form>
+      <button class="btn btn-secondary" (click)="validar()">Registrar</button>
+      <div *ngIf="contra1!=contra2">
+        <div class="alert alert-dismissible alert-danger">
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+          <strong>Las contraseñas no coinciden</strong> 
+        </div>
+      </div>
+      <div *ngIf="existeUsuario">
+        <div class="alert alert-dismissible alert-danger">
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+          <strong>Este usuario ya esta registrado</strong> 
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

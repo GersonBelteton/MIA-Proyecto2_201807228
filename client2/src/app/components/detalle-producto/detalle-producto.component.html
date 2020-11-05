@@ -1,0 +1,47 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary" style="width:100%">
+
+
+    <div class="collapse navbar-collapse" id="navbarColor01">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/user">Perfil </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/user/products">Productos</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/login">Cerrar sesion</a>
+        </li>
+      </ul>
+      <form class="form-inline my-2 my-lg-0">
+        <input class="form-control mr-sm-2" type="text" placeholder="Search">
+        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+      </form>
+    </div>
+  </nav>
+  
+  <div class="jumbotron" style="size: 100%;width: 100%;">
+    <div class="card border-primary mb-3" style="width: 90%;">
+        <div class="card-header">Vendedor: {{nombreU}} {{apellido}}, Creditos:{{precio}} </div>
+        <div class="card-body">
+          <h4 class="card-title">{{nombre}}</h4>
+          <p class="card-text">{{detalle}}</p>
+          <button (click)="pushLike()"type="button" class="btn btn-info">Me gusta: {{likes[0]?.numLikes}}</button>
+          <button (click)="pushDislike()"type="button" class="btn btn-danger">No me gusta:{{dislikes[0]?.numDislikes}}</button>
+        </div>
+        
+      </div>
+      <h4>Comentarios</h4>
+      <div class="form-group">
+       
+        <input [(ngModel)]="coment.descripcion"  style="width: 80%;"type="text" class="form-control"  placeholder="Escribir Comentario">
+        <button (click)="comentar()"type="button" class="btn btn-primary disabled">Comentar</button>
+      </div>
+      <div *ngFor="let comentario of comentarios" class="card border-secondary mb-3" style="width: 90%;">
+        <div class="card-header">{{comentario.nombre}}  {{comentario.apellido}}</div>
+        <div class="card-body">
+          <p class="card-text">{{comentario.descripcion}}</p>
+        </div>
+      </div>
+
+</div>

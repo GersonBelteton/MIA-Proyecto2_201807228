@@ -1,0 +1,79 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+
+  
+    <div class="collapse navbar-collapse" id="navbarColor01">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/user">Perfil </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Productos</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/login">Cerrar sesion</a>
+          </li>
+      </ul>
+      <form class="form-inline my-2 my-lg-0">
+        <input class="form-control mr-sm-2" type="text" placeholder="Search">
+        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+      </form>
+    </div>
+  </nav>
+
+ <div class="card text-white bg-primary mb-3" style="width:50%; float: left; margin-top: 5%; margin-left: 25%;">
+    <div class="card-header">
+      <h4>Modificar datos</h4>
+    </div>
+    <div class="card-body">
+
+      <form>
+        <fieldset>
+
+
+          <div class="form-group">
+            <label for="exampleInputEmail1">Correo electrònico</label>
+            <input [(ngModel)]="usuario.correo" name="correo" type="email" class="form-control"
+              aria-describedby="emailHelp" placeholder="Enter email">
+            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+          </div>
+          <div class="form-group">
+            <label for="exampleInputPassword1">Contraseña</label>
+            <input [(ngModel)]="contra1" name="contrasena" type="password" class="form-control" placeholder="Password">
+          </div>
+          <div class="form-group">
+            <label for="exampleInputPassword1">Confirmar Contraseña</label>
+            <input [(ngModel)]="contra2" name="contrasena2" type="password" class="form-control" placeholder="Password">
+          </div>
+          <div class="form-group">
+            <label>Nombre</label>
+            <input [(ngModel)]="usuario.nombre" name="nombre" type="text" class="form-control">
+          </div>
+          <div class="form-group">
+            <label>Apellido</label>
+            <input [(ngModel)]="usuario.apellido" name="apellido" type="text" class="form-control">
+          </div>
+          <div class="form-group">
+            <label>Fecha de nacimiento</label>
+            <input [(ngModel)]="usuario.fecha_nacimiento" name="fecha" type="text" class="form-control">
+          </div>
+          <div class="form-group">
+            <label>Pais</label>
+            <input [(ngModel)]="usuario.pais" name="pais" type="text" class="form-control">
+          </div>
+
+        </fieldset>
+      </form>
+      <button class="btn btn-secondary" (click)="validar()">Registrar</button>
+      <div *ngIf="contra1!=contra2">
+        <div class="alert alert-dismissible alert-danger">
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+          <strong>Las contraseñas no coinciden</strong> 
+        </div>
+      </div>
+
+
+    </div>
+
+  </div>
+
+
