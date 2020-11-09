@@ -10,6 +10,9 @@ import { UpdateUsuarioComponent } from './components/update-usuario/update-usuar
 import { ListaProductosComponent } from './components/lista-productos/lista-productos.component';
 import { AgregarProductoComponent } from './components/agregar-producto/agregar-producto.component';
 import { DetalleProductoComponent } from './components/detalle-producto/detalle-producto.component';
+import { ChatComponent } from './components/chat/chat.component';
+import { ListaChatComponent } from './components/lista-chat/lista-chat.component';
+import { CompraComponent } from './components/compra/compra.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +22,10 @@ import { DetalleProductoComponent } from './components/detalle-producto/detalle-
     UpdateUsuarioComponent,
     ListaProductosComponent,
     AgregarProductoComponent,
-    DetalleProductoComponent
+    DetalleProductoComponent,
+    ChatComponent,
+    ListaChatComponent,
+    CompraComponent
   ],
   imports: [
     BrowserModule,

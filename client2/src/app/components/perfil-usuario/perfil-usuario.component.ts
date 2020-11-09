@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {UsuariosService} from '../../services/usuarios.service'
+import {ComprasService} from '../../services/compras.service'
 @Component({
   selector: 'app-perfil-usuario',
   templateUrl: './perfil-usuario.component.html',
@@ -7,7 +8,7 @@ import {UsuariosService} from '../../services/usuarios.service'
 })
 export class PerfilUsuarioComponent implements OnInit {
 
-  constructor(private usuarioService: UsuariosService) { }
+  constructor(private comprasService: ComprasService,private usuarioService: UsuariosService) { }
   usuario =  JSON.parse(localStorage.getItem("sesion"))
 
   apellido = this.usuario[0].apellido;
@@ -16,12 +17,12 @@ export class PerfilUsuarioComponent implements OnInit {
   contrasena = this.usuario[0].contrasena;
   pais = this.usuario[0].pais;
   fecha = this.usuario[0].fecha_nacimiento;
-  id = this.usuario[0].idUsuario
+  id = this.usuario[0].id
   foto = this.usuario[0].foto
   url = this.foto
 
   ngOnInit(): void {
-   
+   this.obtenerCompra()
   }
 
   
@@ -61,4 +62,15 @@ modificar(){
 }
 
 
+obtenerCompra(){
+  console.log(this.id)
+  this.comprasService.getCompra(this.id).subscribe(
+    res =>{
+       console.log(res);
+       localStorage.setItem("compra",JSON.stringify(res)) 
+       //location.href = '/user'
+    },
+    err => console.error(err)
+   );
+}
 }

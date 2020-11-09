@@ -5,6 +5,9 @@ import {PerfilUsuarioComponent} from './components/perfil-usuario/perfil-usuario
 import {UpdateUsuarioComponent} from './components/update-usuario/update-usuario.component'
 import {ListaProductosComponent} from './components/lista-productos/lista-productos.component'
 import {DetalleProductoComponent} from './components/detalle-producto/detalle-producto.component'
+import {ChatComponent} from './components/chat/chat.component'
+import {ListaChatComponent} from './components/lista-chat/lista-chat.component'
+import {CompraComponent} from './components/compra/compra.component'
 import { from } from 'rxjs';
 const routes: Routes = [
   {
@@ -32,7 +35,19 @@ const routes: Routes = [
   {
     path:'user/products/detalle',
     component:DetalleProductoComponent
-  } 
+  } ,
+  {
+    path:'user/products/detalle/chat',
+    component:ChatComponent
+  },
+  {
+    path:'user/chat',
+    component:ListaChatComponent
+  },
+  {
+    path:'user/compra',
+    component:CompraComponent
+  }
 ];
 
 @NgModule({

@@ -1,0 +1,49 @@
+
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary" style="width:100%">
+
+
+    <div class="collapse navbar-collapse" id="navbarColor01">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/user">Perfil </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/user/products">Productos</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/user/chat">Chat</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/user/compra">Compras</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/login">Cerrar sesion</a>
+        </li>
+      </ul>
+      <form class="form-inline my-2 my-lg-0">
+        <input class="form-control mr-sm-2" type="text" placeholder="Search">
+        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+      </form>
+    </div>
+  </nav>
+  
+
+  <div class="jumbotron" style="size: 100%;width: 100%;">
+    <table class="table table-hover">
+        <tbody>
+     
+          <tr *ngFor="let chat of chats" class="table-secondary">
+            <td>Chat de {{chat.nombre1}} {{chat.apellido1}} con {{chat.nombre2}} {{chat.apellido2}}</td>
+            <button (click)="verChat(chat.idEmisor,chat.idReceptor)" style="float: right;"type="button" class="btn btn-primary">ver el chat</button>
+          </tr>
+        
+        </tbody>
+      </table>
+
+
+      
+
+
+</div>

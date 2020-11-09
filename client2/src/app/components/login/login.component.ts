@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import {UsuariosService} from '../../services/usuarios.service'
 import {Usuario} from '../../models/usuario'
 import {Login} from '../../models/Login'
+import {ComprasService} from '../../services/compras.service'
+import {Compra}from '../../models/Compra'
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -11,12 +13,17 @@ export class LoginComponent implements OnInit {
 
 
   
-  constructor(private usuarioService: UsuariosService) { }
+  constructor(private usuarioService: UsuariosService, private comprasService:ComprasService) { }
 
   login: Login={
     correo:'',
     contrasena:''
   };
+
+  compra:Compra={
+    idUsuario:0,
+    total:0
+  }
   usuario: Usuario={
     idUsuario: 0,
     correo:'',
@@ -81,13 +88,15 @@ export class LoginComponent implements OnInit {
       console.log('administrador')
       location.href = '/admin' 
     }else{
+    
       console.log("login us")
       this.usuarioService.auth(this.login)
       .subscribe(res => {
         console.log(res)
         
         localStorage.setItem("sesion",JSON.stringify(res));
-        location.href = '/user'
+        this.existeCompra()
+        //location.href = '/user'
         
       }, error => {
         console.log('hay un error :(')
@@ -96,6 +105,43 @@ export class LoginComponent implements OnInit {
     }
 
   }
+
+  usuariocompra
+
+  existeCompra(){
+    this.usuariocompra =  JSON.parse(localStorage.getItem("sesion"))
+    this.comprasService.existeCompra(this.usuariocompra[0].id).subscribe(
+      res =>{
+         console.log(res);
+         if(res != '0'){
+          console.log('compra ya existe')
+          location.href = '/user'
+        }else{
+          console.log('compra no existe')
+          this.crearCompra()
+        }
+     
+      },
+      err => console.error(err)
+     );
+  }
+  crearCompra(){
+    this.usuariocompra =  JSON.parse(localStorage.getItem("sesion"))
+    console.log(this.usuariocompra[0].id)
+    this.compra.idUsuario = this.usuariocompra[0].id
+    this.comprasService.addCompra(this.compra).subscribe(
+      res =>{
+         console.log(res);
+         location.href = '/user'
+     
+      },
+      err => console.error(err)
+     );
+
+ 
+  }
+
+
 
 }
 

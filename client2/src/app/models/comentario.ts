@@ -5,5 +5,6 @@ export interface Comentario{
     idProducto?: number;
     descripcion?: string;
     tipo?: string;
+    idUsuariod?:number;
 
 }

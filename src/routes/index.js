@@ -46,7 +46,7 @@ router.get('/getUsers', async (req, res) => {
             "fecha_nacimiento": user[5],
             "pais": user[6],
             "foto":user[7],
-            "credito":user[8]
+            "credito":user[9]
         
         }
 
@@ -66,7 +66,7 @@ router.get('/existeUsuario/:correo',async (req,res)=>{
 router.post('/addUser', async (req, res) => {
     const { correo, contrasena, nombre, apellido, fecha_nacimiento, pais } = req.body;
     
-    sql = "insert into Usuario(correo, contrasena, nombre, apellido,fecha_nacimiento,pais,foto) values (:correo,:contrasena,:nombre,:apellido,:fecha_nacimiento,:pais,'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png')";
+    sql = "insert into Usuario(correo, contrasena, nombre, apellido,fecha_nacimiento,pais,foto,credito) values (:correo,:contrasena,:nombre,:apellido,:fecha_nacimiento,:pais,'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',500)";
     await BD.Open(sql, [ correo, contrasena, nombre, apellido, fecha_nacimiento, pais ], true);
     res.status(200).json({
         "correo": correo,
@@ -144,7 +144,7 @@ router.post('/login', async (req,res)=>{
 router.post('/addProduct', async (req, res) => {
     const { nombre_producto, detalle, precio,idUsuario} = req.body;
     
-    sql = "insert into Producto(nombre_producto, detalle, precio, likes,dislikes,idUsuario) values (:nombre_producto,:detalle,:precio,0,0,:idUsuario)";
+    sql = "insert into Producto(nombre_producto, detalle, precio, likes,dislikes,idUsuario,idCompra) values (:nombre_producto,:detalle,:precio,0,0,:idUsuario,0)";
     await BD.Open(sql, [ nombre_producto, detalle, precio,idUsuario], true);
     res.status(200).json({
         "nombre_producto": nombre_producto,
@@ -155,7 +155,7 @@ router.post('/addProduct', async (req, res) => {
 
 
 router.get('/getProducts', async (req, res) => {
-    sql = "select * from Producto inner join Usuario on Producto.idUsuario = Usuario.idUsuario";
+    sql = "select * from Producto inner join Usuario on Producto.idUsuario = Usuario.idUsuario where Producto.idCompra = 0";
 
     let result = await BD.Open(sql, [], false);
     products = [];
@@ -320,11 +320,31 @@ router.post('/addComent',async(req,res)=>{
         "tipo":tipo
     })
 })
+router.get('/getComents', async (req, res) => {
+    
+    sql = "select * from Comentario ";
 
+    let result = await BD.Open(sql, [], false);
+    comentarios = [];
+
+    result.rows.map(comentario => {
+        let comentariosSchema = {
+            "idComentario":comentario[0],
+            "idUsuario":comentario[2],
+            "idProducto":comentario[1],
+            "descripcion":comentario[3],
+            "tipo":comentario[4],
+        }
+
+        comentarios.push(comentariosSchema);
+    })
+
+    res.json(comentarios);
+})
 
 router.get('/getComents/:id', async (req, res) => {
     id = req.params.id 
-    sql = "select * from Comentario inner join Usuario on Comentario.idUsuario = Usuario.idUsuario where idProducto = :id";
+    sql = "select * from Comentario inner join Usuario on Comentario.idUsuario = Usuario.idUsuario where idProducto = :id and comentario.tipo = \'C\'";
 
     let result = await BD.Open(sql, [id], false);
     comentarios = [];
@@ -336,8 +356,8 @@ router.get('/getComents/:id', async (req, res) => {
             "idProducto":comentario[1],
             "descripcion":comentario[3],
             "tipo":comentario[4],
-            "nombre":comentario[7],
-            "apellido":comentario[8]
+            "nombre":comentario[8],
+            "apellido":comentario[9]
         }
 
         comentarios.push(comentariosSchema);
@@ -345,8 +365,249 @@ router.get('/getComents/:id', async (req, res) => {
 
     res.json(comentarios);
 })
+
+
+router.post('/addComentChat',async(req,res)=>{
+    const {idUsuario,idProducto,descripcion,tipo,idUsuariod} = req.body
+    sql = 'insert into Comentario(idUsuario,idProducto,descripcion,tipo,idUsuariod)values(:idUsuario,:idProducto,:descripcion,:tipo,:idUsuariod)'
+    await BD.Open(sql,[idUsuario,idProducto,descripcion,tipo,idUsuariod],true)
+
+    res.status(200).json({
+        "idUsuario": idUsuario,
+        "idProducto": idProducto,
+        "descripcion":descripcion,
+        "tipo":tipo,
+        "idUsuariod":idUsuariod
+    })
+})
+router.get('/getChat', async (req, res) => {
+    idv = req.query.idV
+    idc = req.query.idC
+    console.log(idc)
+    console.log(idv)
+    
+    sql = "select u1.nombre,u1.apellido,u2.nombre,u2.apellido,descripcion from comentario inner join usuario u1 on comentario.idusuario = u1.idusuario inner join usuario u2 on comentario.idusuariod = u2.idusuario where((comentario.idusuario = :idv and idusuariod = :idc)or(comentario.idusuario = :idc and idusuariod = :idv)) order by idComentario desc";
+
+    let result = await BD.Open(sql, [idv,idc,idc,idv], false);
+    comentarios = [];
+
+    result.rows.map(comentario => {
+        let comentariosSchema = {
+            "nombreOr":comentario[0],
+            "apellidoOr":comentario[1],
+            "nombreDes":comentario[2],
+            "apellidoDes":comentario[3],
+            "descripcion":comentario[4]
+        }
+
+        comentarios.push(comentariosSchema);
+    })
+
+    res.json(comentarios);
+})
+
+
+
+router.post('/addChat', async (req, res) => {
+    const { idEmisor, idReceptor} = req.body;
+    
+    sql = "insert into Chat(idEmisor,idReceptor) values (:idEmisor,:idReceptor)";
+    await BD.Open(sql, [ idEmisor,idReceptor], true);
+    res.status(200).json({
+        "idEmisor": idEmisor,
+        "idReceptor": idReceptor
+    })
+})
+
+
+router.get('/getChatList/:id', async (req, res) => {
+    id = req.params.id 
+    sql = "select idChat, idEmisor,idReceptor,u1.nombre,u1.apellido,u2.nombre,u2.apellido from Chat inner join usuario u1 on u1.idUsuario = Chat.idEmisor inner join usuario u2 on u2.idUsuario = Chat.idReceptor where idEmisor = :id or idReceptor = :id";
+
+    let result = await BD.Open(sql, [id], false);
+    comentarios = [];
+
+    result.rows.map(comentario => {
+        let comentariosSchema = {
+            "idChat":comentario[0],
+            "idEmisor":comentario[1],
+            "idReceptor":comentario[2],
+            "nombre1":comentario[3],
+            "apellido1":comentario[4],
+            "nombre2":comentario[5],
+            "apellido2":comentario[6]
+
+        }
+
+        comentarios.push(comentariosSchema);
+    })
+
+    res.json(comentarios);
+})
+
+
+router.get('/existeChat',async (req,res)=>{
+
+    idc = req.query.idC 
+    idv = req.query.idV
+    sql = 'select count(*) from Chat where (idEmisor = :idv and idReceptor = :idc)or(idEmisor = :idc and idReceptor = :idv)'
+    let result = await BD.Open(sql,[idv,idc,idc,idv],false);
+    res.send(result.rows.toString())
+})
+
+
+
+//////////////////////////////////////////////Compra/////////////////////////////////////
+router.get('/getCompras',async(req,res)=>{
+    sql = 'select * from compra'
+    let result = await BD.Open(sql,[],false);
+    res.send(result.rows.toString())
+})
+
+
+
+router.get('/getCompra/:id', async (req, res) => {
+    id = req.params.id 
+    console.log(id)
+    sql = "select * from Compra where idUsuario = :id";
+
+    let result = await BD.Open(sql, [id], false);
+    comentarios = [];
+
+    result.rows.map(comentario => {
+        let comentariosSchema = {
+            "idCompra":comentario[0],
+            "idUsuario":comentario[1],
+            "total":comentario[2],
+
+        }
+
+        comentarios.push(comentariosSchema);
+    })
+
+    res.json(comentarios);
+})
+router.post('/addCompra', async (req, res) => {
+    const { idUsuario,total} = req.body;
+    
+    sql = "insert into Compra(idUsuario,total) values (:idUsuario,:total)";
+    await BD.Open(sql, [idUsuario,total], true);
+    res.status(200).json({
+        "idUsuario": idUsuario,
+        "total":total
+    })
+})
+
+router.put('/setIdCompra', async (req, res) => {
+    idCompra = req.query.idC
+    idProducto = req.query.idP
+    
+    sql = "update producto set idCompra = :idCompra where idProducto = :idProducto";
+    await BD.Open(sql, [idCompra,idProducto], true);
+    res.status(200).json({
+        "idCompra": idCompra,
+        "idProducto": idProducto
+    })
+})
+
+
+router.put('/setTotal/:id', async (req, res) => {
+  
+    idCompra = req.params.id   
+    sql = "update Compra set total = (select sum(precio)from producto where idCompra = :idCompra)where idCompra = :idCompra";
+    await BD.Open(sql, [idCompra], true);
+    res.status(200).json({
+        "idCompra": idCompra,
+    })
+})
+router.put('/limpiarCarro/:id', async (req, res) => {
+  
+    idCompra = req.params.id   
+    sql = "update Producto set idCompra = 0 where idCompra = :id";
+    await BD.Open(sql, [idCompra], true);
+    res.status(200).json({
+        "idCompra": idCompra,
+    })
+})
+
+sql = "update (select credito from usuario inner join producto on usuario.idusuario = producto.idusuario where producto.idcompra = :idcompra) t set t.credito = (select t.credito + sum(precio) from usuario inner join producto on usuario.isUsuario = producto.idUsuario where producto.idCompra = :idCompra ) "
+
+router.put('/restarTotal/:id', async (req, res) => {
+  
+    idCompra = req.params.id   
+    sql = "update usuario set credito = (select credito - :total from usuario where idUsuario = :id) where usuario.idUsuario = :id ";
+    await BD.Open(sql, [idCompra], true);
+    res.status(200).json({
+        "idCompra": idCompra,
+    })
+})
+
+router.delete('/deleteCompras/:id',async(req,res)=>{
+    const idUsuario = req.params.id
+    await BD.Open('DELETE FROM Compra WHERE idUsuario = :idUsuario ',[idUsuario],true);
+    res.json({text:'eliminando Compra'});
+})
+
+router.get('/existeCompra/:id',async (req,res)=>{
+
+    id = req.params.id 
+    sql = 'select count(*) from Compra where idUsuario = :id'
+    let result = await BD.Open(sql,[id],false);
+    res.send(result.rows.toString())
+})
+
+
+router.get('/getProductsCompra/:id', async (req, res) => {
+    id = req.params.id 
+
+    sql = "select * from Producto where idCompra = :id";
+
+    let result = await BD.Open(sql, [id], false);
+    products = [];
+
+    result.rows.map(product => {
+        let productSchema = {
+            "id":product[0],
+            "nombre": product[1],
+            "detalle": product[2],
+            "precio": product[3],
+            "idUsuario": product[6],
+            "idCategoria":product[7],
+            "idCompra":product[8],
+        }
+
+        products.push(productSchema);
+    })
+
+    res.json(products);
+})
+
+
+router.get('/getTotal/:id', async (req, res) => {
+    id = req.params.id 
+    console.log(id)
+    sql = "select total from Compra where idCompra = :id";
+
+    let result = await BD.Open(sql, [id], false);
+    comentarios = [];
+
+    result.rows.map(comentario => {
+        let comentariosSchema = {
+            "total":comentario[0],
+      
+
+        }
+
+        comentarios.push(comentariosSchema);
+    })
+
+    res.json(comentarios);
+})
+
 module.exports = router
 
+
+//select u1.nombre,u2.nombre,descripcion from comentario inner join usuario u1 on comentario.idusuario = u1.idusuario inner join usuario u2 on comentario.idusuariod = u2.idusuario where((comentario.idusuario = 2 and idusuariod = 21)or(comentario.idusuario = 21 and idusuariod = 2)) and tipo = 'h';
 /*create table Usuario(
     idUsuario number GENERATED BY DEFAULT AS- IDENTITY,
     nombre varchar(16) NOT NULL,
@@ -381,7 +642,6 @@ create table Compra(
     total decimal(9,9),
     primary key (idCompra),
     foreign key (idUsuario) references Usuario(idUsuario)
-
 );
 
 create table Producto(

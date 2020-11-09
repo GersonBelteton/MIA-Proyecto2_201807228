@@ -6,6 +6,7 @@ import { Producto } from '../models/producto'
 import {Like} from '../models/like'
 import {Dislike} from '../models/dislike'
 import {Comentario} from '../models/comentario'
+import {Chat} from '../models/Chat'
 @Injectable({
   providedIn: 'root'
 })
@@ -78,4 +79,24 @@ export class ProductosService {
     return this.http.post(this.dir+'/addComent',comentario)
   }
 
+  
+  saveChat(comentario:Comentario){
+    return this.http.post(this.dir+'/addComentChat',comentario)
+  }
+
+  getChat(idV:any,idC:any){
+    return this.http.get(this.dir+'/getChat?idV='+idV+'&idC='+idC)
+  }
+
+  addChat(chat:Chat){
+    return this.http.post(this.dir+'/addChat',chat)
+  }
+
+  getChatList(id:any){
+    return this.http.get(this.dir+'/getChatList/'+id)
+  }
+
+  existeChat(idV:any,idC:any){
+    return this.http.get(this.dir+'/existeChat?idV='+idV+'&idC='+idC)
+  }
 }

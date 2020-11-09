@@ -3,6 +3,7 @@ import {ProductosService}from '../../services/productos.service'
 import {Like} from '../../models/like'
 import {Dislike} from '../../models/dislike'
 import {Comentario}from '../../models/comentario'
+import {Chat}from '../../models/Chat'
 @Component({
   selector: 'app-detalle-producto',
   templateUrl: './detalle-producto.component.html',
@@ -21,6 +22,7 @@ export class DetalleProductoComponent implements OnInit {
   precio = this.producto[0].precio
   nombreU = this.producto[0].nombreU
   apellido = this.producto[0].apellido
+  idUsuariod = this.producto[0].idUsuario
   likes:any = []
   dislikes:any = []
 
@@ -33,6 +35,10 @@ export class DetalleProductoComponent implements OnInit {
     tipo:'C'
   }
 
+  chat: Chat={
+    idEmisor:this.idUsuario,
+    idReceptor:this.idUsuariod
+  }
   like: Like={
     idUsuario: this.idUsuario,
     idProducto:this.idProducto
@@ -196,5 +202,36 @@ export class DetalleProductoComponent implements OnInit {
       },
       err=>console.log(err)
     )
+  }
+
+  existeChat(){
+    this.productosService.existeChat(this.idUsuario,this.idUsuariod).subscribe(
+      res =>{
+        console.log(res)
+        if(res != '0'){
+          localStorage.setItem("chat",JSON.stringify(this.chat))
+
+          location.href='/user/products/detalle/chat'
+        }else{
+          this.iniciarchat()
+        }
+      },
+      err=>console.log(err)
+    )   
+
+  }
+  iniciarchat(){
+    this.productosService.addChat(this.chat).subscribe(
+      res =>{
+        console.log(res)
+        //location.href='/user/products/detalle'
+
+        localStorage.setItem("chat",JSON.stringify(this.chat))
+
+        location.href='/user/products/detalle/chat'
+      },
+      err=>console.log(err)
+    )
+   
   }
 }

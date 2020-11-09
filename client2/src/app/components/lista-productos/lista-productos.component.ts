@@ -1,6 +1,7 @@
 import { Component, OnInit, HostBinding } from '@angular/core';
 import {ProductosService}from '../../services/productos.service'
 import {Producto} from '../../models/producto'
+import {ComprasService} from '../../services/compras.service'
 @Component({
   selector: 'app-lista-productos',
   templateUrl: './lista-productos.component.html',
@@ -8,8 +9,10 @@ import {Producto} from '../../models/producto'
 })
 export class ListaProductosComponent implements OnInit {
   //@HostBinding('class') classes = 'row'
-  constructor(private productosService:ProductosService) { }
+  constructor(private productosService:ProductosService, private comprasService:ComprasService) { }
   usuario =  JSON.parse(localStorage.getItem("sesion"))
+  compra =  JSON.parse(localStorage.getItem("compra"))
+  idCompra = this.compra[0].idCompra
   idUs = this.usuario[0].id
   productos:any=[]
 
@@ -70,5 +73,31 @@ export class ListaProductosComponent implements OnInit {
       err => console.log(err)
     )
     
+  }
+
+
+  agregarCompra(idProducto){
+    this.comprasService.setIdCompra(this.idCompra,idProducto).subscribe(
+      res => {
+      
+        console.log(res)
+        this.sumarTotal()
+      },
+      err => console.log(err)
+    )
+
+   
+  }
+
+
+  sumarTotal(){
+    this.comprasService.setTotal(this.idCompra).subscribe(
+      res => {
+      
+        console.log(res)
+        location.href='/user/products'
+      },
+      err => console.log(err)
+    )
   }
 }

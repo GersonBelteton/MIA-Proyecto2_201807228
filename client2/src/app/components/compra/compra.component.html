@@ -1,0 +1,65 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary" style="width:100%">
+
+
+    <div class="collapse navbar-collapse" id="navbarColor01">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/user">Perfil </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/user/products">Productos</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/user/chat">Chat</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/user/compra">Compras</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/login">Cerrar sesion</a>
+        </li>
+      </ul>
+      <form class="form-inline my-2 my-lg-0">
+        <input class="form-control mr-sm-2" type="text" placeholder="Search">
+        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+      </form>
+    </div>
+  </nav>
+
+  <div class="jumbotron" style="size: 100%;width: 100%;">
+    <div class="card text-white bg-dark mb-3" style="max-width: 80%">
+        <div class="card-header">Carrito de compra</div>
+        <div class="card-body">
+            <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Detalle</th>
+                    <th scope="col">Precio</th>
+                  </tr>
+                </thead>
+                <tbody>
+         
+                  <tr *ngFor="let producto of productos"class="table-light">
+                    <td>{{producto.id}}</td>
+                    <td>{{producto.nombre}}</td>
+                    <td>{{producto.detalle}}</td>
+                    <td>{{producto.precio}}</td>
+                  </tr>
+                  <tr class ="table-light">
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td> Total: {{total.total}}</td>
+                     
+                  </tr>
+            
+                </tbody>
+              </table>
+
+              <button (click)="limpiarCarro()" type="button" class="btn btn-warning">Limpiar carro</button>
+        </div>
+    </div>
+
+</div>
