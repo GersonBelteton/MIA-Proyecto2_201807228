@@ -13,6 +13,8 @@ import { DetalleProductoComponent } from './components/detalle-producto/detalle-
 import { ChatComponent } from './components/chat/chat.component';
 import { ListaChatComponent } from './components/lista-chat/lista-chat.component';
 import { CompraComponent } from './components/compra/compra.component';
+import { AdministradorComponent } from './components/administrador/administrador.component';
+import { ReportesComponent } from './components/reportes/reportes.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +27,9 @@ import { CompraComponent } from './components/compra/compra.component';
     DetalleProductoComponent,
     ChatComponent,
     ListaChatComponent,
-    CompraComponent
+    CompraComponent,
+    AdministradorComponent,
+    ReportesComponent
   ],
   imports: [
     BrowserModule,

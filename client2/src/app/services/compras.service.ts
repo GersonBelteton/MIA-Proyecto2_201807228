@@ -53,7 +53,22 @@ export class ComprasService {
     return this.http.get(this.dir+'/getTotal/'+id)
   }
 
+  getCredito(id:any){
+    return this.http.get(this.dir+'/getCreditos/'+id)
+  }
   limpiarCarro(id:any){
     return this.http.put(this.dir+'/limpiarCarro/'+id,null)
+  }
+
+  sumarCredito(precio:any,idV:any){
+    return this.http.put(this.dir+'/sumarCredito?precio='+precio+'&idV='+idV,null)
+  }
+
+  restarCredito(total:any,idC:any){
+    return this.http.put(this.dir+'/restarCredito?total='+total+'&idC='+idC,null)
+  }
+
+  borrarProductos(id:any){
+    return this.http.delete(this.dir+'/deleteProducto/'+id)
   }
 }

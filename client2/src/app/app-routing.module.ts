@@ -8,6 +8,8 @@ import {DetalleProductoComponent} from './components/detalle-producto/detalle-pr
 import {ChatComponent} from './components/chat/chat.component'
 import {ListaChatComponent} from './components/lista-chat/lista-chat.component'
 import {CompraComponent} from './components/compra/compra.component'
+import {AdministradorComponent} from './components/administrador/administrador.component'
+import {ReportesComponent} from './components/reportes/reportes.component'
 import { from } from 'rxjs';
 const routes: Routes = [
   {
@@ -47,6 +49,14 @@ const routes: Routes = [
   {
     path:'user/compra',
     component:CompraComponent
+  },
+  {
+    path:'admin',
+    component:AdministradorComponent
+  },
+  {
+    path:'admin/reportes',
+    component:ReportesComponent
   }
 ];
 

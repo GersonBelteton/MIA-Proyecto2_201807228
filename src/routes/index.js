@@ -131,7 +131,8 @@ router.post('/login', async (req,res)=>{
             "contrasena": user[4],
             "fecha_nacimiento": user[5],
             "pais": user[6],
-            "foto":user[7]
+            "foto":user[7],
+            "credito":user[9]
         }
 
         users.push(userSchema);
@@ -532,11 +533,26 @@ router.put('/limpiarCarro/:id', async (req, res) => {
 
 sql = "update (select credito from usuario inner join producto on usuario.idusuario = producto.idusuario where producto.idcompra = :idcompra) t set t.credito = (select t.credito + sum(precio) from usuario inner join producto on usuario.isUsuario = producto.idUsuario where producto.idCompra = :idCompra ) "
 
-router.put('/restarTotal/:id', async (req, res) => {
+router.put('/sumarCredito', async (req, res) => {
   
-    idCompra = req.params.id   
-    sql = "update usuario set credito = (select credito - :total from usuario where idUsuario = :id) where usuario.idUsuario = :id ";
-    await BD.Open(sql, [idCompra], true);
+    precio = req.query.precio 
+    idV = req.query.idV 
+
+    sql = "update usuario set credito = credito + :precio where idUsuario = :idV";
+    await BD.Open(sql, [precio, idV], true);
+    res.status(200).json({
+        "idCompra": idCompra,
+    })
+})
+
+
+router.put('/restarCredito', async (req, res) => {
+  
+    total = req.query.total 
+    idC = req.query.idC
+
+    sql = "update usuario set credito = credito - :total where idUsuario = :idC";
+    await BD.Open(sql, [total, idC], true);
     res.status(200).json({
         "idCompra": idCompra,
     })
@@ -581,6 +597,32 @@ router.get('/getProductsCompra/:id', async (req, res) => {
 
     res.json(products);
 })
+router.get('/getCreditos/:id', async (req, res) => {
+    id = req.params.id 
+    console.log(id)
+    sql = "select credito from Usuario where idUsuario = :id";
+
+    let result = await BD.Open(sql, [id], false);
+    comentarios = [];
+
+    result.rows.map(comentario => {
+        let comentariosSchema = {
+            "credito":comentario[0],
+    
+        }
+
+        comentarios.push(comentariosSchema);
+    })
+
+    res.json(comentarios);
+})
+
+
+router.delete('/deleteProducto/:id',async(req,res)=>{
+    const idCompra = req.params.id
+    await BD.Open('DELETE FROM Producto WHERE idCompra = :idCompra ',[idCompra],true);
+    res.json({text:'eliminando Producto'});
+})
 
 
 router.get('/getTotal/:id', async (req, res) => {
@@ -594,8 +636,6 @@ router.get('/getTotal/:id', async (req, res) => {
     result.rows.map(comentario => {
         let comentariosSchema = {
             "total":comentario[0],
-      
-
         }
 
         comentarios.push(comentariosSchema);
@@ -604,9 +644,129 @@ router.get('/getTotal/:id', async (req, res) => {
     res.json(comentarios);
 })
 
+//////////////////////////////////////Reportes/////////////////////////////////
+
+router.get('/topLike', async (req, res) => {
+    sql = "select count(likes.idProducto) as likes, producto.nombre_producto from  likes inner join producto on producto.idProducto = likes.idProducto group by producto.nombre_producto order by likes desc FETCH FIRST 10 ROWS ONLY";
+
+    let result = await BD.Open(sql, [], false);
+    consultas = [];
+
+    result.rows.map(consulta => {
+        let consultasSchema = {
+            "Likes":consulta[0],
+            "Producto":consulta[1]
+        }
+
+        consultas.push(consultasSchema);
+    })
+
+    res.json(consultas);
+})
+
+router.get('/topDislike', async (req, res) => {
+    sql = "select count(dislikes.idProducto) as dislikes, producto.nombre_producto from  dislikes inner join producto on producto.idProducto = dislikes.idProducto group by producto.nombre_producto order by dislikes desc FETCH FIRST 10 ROWS ONLY";
+
+    let result = await BD.Open(sql, [], false);
+    consultas = [];
+
+    result.rows.map(consulta => {
+        let consultasSchema = {
+            "Dislikes":consulta[0],
+            "Producto":consulta[1]
+        }
+
+        consultas.push(consultasSchema);
+    })
+
+    res.json(consultas);
+})
+
+router.get('/topClienteMasCredito', async (req, res) => {
+    sql = "select credito, nombre,apellido from usuario order by credito desc FETCH FIRST 10 ROWS ONLY";
+
+    let result = await BD.Open(sql, [], false);
+    consultas = [];
+
+    result.rows.map(consulta => {
+        let consultasSchema = {
+            "credito":consulta[0],
+            "nombre":consulta[1],
+            "apellido":consulta[2]
+        }
+
+        consultas.push(consultasSchema);
+    })
+
+    res.json(consultas);
+})
+
+router.get('/topClienteMenosCredito', async (req, res) => {
+    sql = "select credito, nombre,apellido from usuario order by credito asc FETCH FIRST 10 ROWS ONLY";
+
+    let result = await BD.Open(sql, [], false);
+    consultas = [];
+
+    result.rows.map(consulta => {
+        let consultasSchema = {
+            "credito":consulta[0],
+            "nombre":consulta[1],
+            "apellido":consulta[2]
+        }
+
+        consultas.push(consultasSchema);
+    })
+
+    res.json(consultas);
+})
+
+router.get('/topClientePublicacion', async (req, res) => {
+    sql = "select count(producto.idusuario) as publicaciones , usuario.nombre from usuario inner join producto on usuario.idusuario = producto.idusuario group by usuario.nombre order by publicaciones desc FETCH FIRST 10 ROWS ONLY";
+
+    let result = await BD.Open(sql, [], false);
+    consultas = [];
+
+    result.rows.map(consulta => {
+        let consultasSchema = {
+            "publicaciones":consulta[0],
+            "nombre":consulta[1],
+            "apellido":consulta[2]
+        }
+
+        consultas.push(consultasSchema);
+    })
+
+    res.json(consultas);
+})
+
+
+router.get('/topPaises', async (req, res) => {
+    sql = "select sum(credito) as total,count(producto.idProducto)as prod,pais from usuario inner join producto on producto.idUsuario = usuario.idusuario group by pais order by total desc FETCH FIRST 10 ROWS ONLY";
+
+    let result = await BD.Open(sql, [], false);
+    consultas = [];
+
+    result.rows.map(consulta => {
+        let consultasSchema = {
+            "creditos":consulta[0],
+            "publicaciones":consulta[1],
+            "pais":consulta[2]
+
+        }
+
+        consultas.push(consultasSchema);
+    })
+
+    res.json(consultas);
+})
 module.exports = router
 
-
+/*select count(likes.idProducto) as likes, producto.nombre_producto from  likes inner join producto on producto.idProducto = likes.idProducto group by producto.nombre_producto order by likes desc FETCH FIRST 10 ROWS ONLY
+select count(dislikes.idProducto) as dislikes, producto.nombre_producto from  dislikes inner join producto on producto.idProducto = dislikes.idProducto group by producto.nombre_producto order by dislikes desc FETCH FIRST 10 ROWS ONLY
+select * from usuario order by credito desc FETCH FIRST 10 ROWS ONLY
+select * from usuario order by credito asc FETCH FIRST 10 ROWS ONLY
+select count(producto.idusuario) as publicaciones , usuario.nombre from usuario inner join producto on usuario.idusuario = producto.idusuario group by usuario.nombre order by publicaciones desc FETCH FIRST 10 ROWS ONLY;
+select sum(credito) as total,count(producto.idProducto)as prod,pais from usuario inner join producto on producto.idUsuario = usuario.idusuario group by pais order by total desc FETCH FIRST 10 ROWS ONLY;*/ 
 //select u1.nombre,u2.nombre,descripcion from comentario inner join usuario u1 on comentario.idusuario = u1.idusuario inner join usuario u2 on comentario.idusuariod = u2.idusuario where((comentario.idusuario = 2 and idusuariod = 21)or(comentario.idusuario = 21 and idusuariod = 2)) and tipo = 'h';
 /*create table Usuario(
     idUsuario number GENERATED BY DEFAULT AS- IDENTITY,

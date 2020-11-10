@@ -1,0 +1,107 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+
+  
+    <div class="collapse navbar-collapse" id="navbarColor01">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/admin">Perfil </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" routerLink="/admin/reportes">Reportes </a>
+          </li>
+        <li class="nav-item">
+            <a class="nav-link" routerLink="/login">Cerrar sesion</a>
+          </li>
+      </ul>
+
+    </div>
+  </nav>
+  <div class="jumbotron" style="size: 100%;"> 
+    <table style="size:100%;">
+        <tr style="width: 100%; height: 20%;"> 
+            <h2 style= "float:left"class="display-3">Reportes</h2>
+      
+        </tr>
+        <tr>
+            <button (click)="topMegusta()" type="button" class="btn btn-secondary" >Me Gusta</button>
+            <button (click)="topNoMegusta()"type="button" class="btn btn-secondary" >No Me Gusta</button>
+            <button (click)="topCmasC()"type="button" class="btn btn-secondary" >Clientes con mas credito</button>
+            <button (click)="topCmenosC()"type="button" class="btn btn-secondary" >Clientes con menos credito</button>
+            <button (click)="topPub()"type="button" class="btn btn-secondary" >Clientes con mas publicaciones</button>
+            <button (click)="topPaises()"type="button" class="btn btn-secondary" >Paises con mas credito</button>
+        </tr>
+        <tr>
+            <table class="table table-hover">
+     
+                <tbody *ngIf="activeMeGusta">
+                    <tr class="table-dark">
+                        <td>Likes</td>
+                        <td>Producto</td>
+                    </tr>
+                  <tr *ngFor="let lista of listas"class="table-dark">
+                    <td>{{lista.Likes}}</td>
+                    <td>{{lista.Producto}}</td>
+                  </tr>
+                </tbody>
+                <tbody *ngIf="activeNoMeGusta">
+                    <tr class="table-dark">
+                        <td>Dislikes</td>
+                        <td>Producto</td>
+                    </tr>
+                    <tr *ngFor="let lista of listas"class="table-dark">
+                      <td>{{lista.Dislikes}}</td>
+                      <td>{{lista.Producto}}</td>
+                    </tr>
+                  </tbody>
+
+                  <tbody *ngIf="activeCmasC">
+                    <tr class="table-dark">
+                        <td>Credito</td>
+                        <td>Nombre</td>
+                    </tr>
+                    <tr *ngFor="let lista of listas"class="table-dark">
+                      <td>{{lista.credito}}</td>
+                      <td>{{lista.nombre}} {{lista.apellido}}</td>
+                    </tr>
+                  </tbody>
+
+                  <tbody *ngIf="activeCmenosC">
+                    <tr class="table-dark">
+                        <td>Credito</td>
+                        <td>Nombre</td>
+                    </tr>
+                    <tr *ngFor="let lista of listas" class="table-dark">
+                        <td>{{lista.credito}}</td>
+                        <td>{{lista.nombre}} {{lista.apellido}}</td>
+                    </tr>
+                  </tbody>
+
+                  <tbody *ngIf="activePub">
+                    <tr class="table-dark">
+                        <td>Publicaciones</td>
+                        <td>Nombre</td>
+                    </tr>
+                    <tr *ngFor="let lista of listas" class="table-dark">
+                      <td>{{lista.publicaciones}}</td>
+                      <td>{{lista.nombre}}</td>
+                    </tr>
+                  </tbody>
+
+                  <tbody *ngIf="activePaises">
+                    <tr class="table-dark">
+                        <td>Creditos</td>
+                        <td>Publicaciones</td>
+                        <td>Pais</td>
+                    </tr>
+                    <tr  *ngFor="let lista of listas" class="table-dark">
+                        <td>{{lista.creditos}}</td>
+                        <td>{{lista.publicaciones}}</td>
+                      <td> {{lista.pais}}</td>
+                    </tr>
+                  </tbody>
+                
+              </table>
+        </tr>
+    </table>
+
+  </div>
